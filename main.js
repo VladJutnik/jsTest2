@@ -95,6 +95,7 @@ function dragAndDropZones()
             /*
             * ИЗБАВИТСЯ ОТ itemId с помошью e.target.id
             * потом избавиться от dragItem определить какой элемент был передвинут из правого сектора или левого
+            * Для того чтобы можно было перетаскивать элементы между секций
             * НЕ ИЗМЕНЯЕТСЯ У ЭЛЕМЕНТОВ id !!
             * */
             if (itemId !== 'addColumns')
@@ -132,6 +133,9 @@ dragAndDropZones()
 function dragAndDropRightColumn()
 {
     //перечисляем все элементы в правой колонке
+    /*
+    * ДОБАВИТЬ СЮДА ('.col-flex-element:not(.wdwdwdw)') что бы каждый раз не навешивать события сюда !!!
+    * */
     const listItems = document.querySelectorAll('.list_item')
     //перебераем массивы
     for (let i = 0; i < listItems.length; i++)
