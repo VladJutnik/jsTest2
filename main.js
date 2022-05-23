@@ -91,6 +91,12 @@ function dragAndDropZones()
         })
         listsZones[j].addEventListener('drop', function (e) {
             console.log(dragItem)
+
+            /*
+            * ИЗБАВИТСЯ ОТ itemId с помошью e.target.id
+            * потом избавиться от dragItem определить какой элемент был передвинут из правого сектора или левого
+            * НЕ ИЗМЕНЯЕТСЯ У ЭЛЕМЕНТОВ id !!
+            * */
             if (itemId !== 'addColumns')
             {
                 this.append(dragItem)
@@ -103,7 +109,6 @@ function dragAndDropZones()
                 //ПРОВЕРИТЬ МБ ТУТ Я ПОЛУЧАЮ ID !!!
                 // console.log(e.target.attributes.id.value)
                 //console.log(e.target.parentElement)
-                let colZone = e.target.parentElement
                 if (e.target.parentElement.querySelectorAll('.colZone').length === 3)
                 {
                     alert('Вы больше не можете добавить сюда колонки! Добавьте новую строку')
@@ -112,7 +117,7 @@ function dragAndDropZones()
                 {
                     dragItem.id = `row${idBoardEl++}`
 
-                    colZone.append(dragItem)
+                    e.target.parentElement.append(dragItem)
 
                     dragAndDropZones()
                 }
