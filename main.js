@@ -51,6 +51,7 @@ let idItemsEl = 1 //id элементов куда тащим элементы
 let idBoardEl = 2 // id доски куда тащим элементы
 let addColumAll = false // если перетаскиваем колонку
 
+
 //ф-ции для добавления колонок
 function addBoard()
 {
@@ -59,7 +60,7 @@ function addBoard()
     board.innerHTML = `
         <div class="fon border-2 rounded mb-3 zone ">
             <div id="${idBoardEl}" class="super_row">
-                <div id="row${idBoardEl++}/col1" class="col-flex-element colZone"></div>
+                <div id="row${idBoardEl++}" class="col-flex-element colZone"></div>
             </div>
         </div>
     `
@@ -72,9 +73,10 @@ addLine.addEventListener('click', addBoard)
 function dragAndDropZones()
 {
     //находим все зоны в которые можно скидывать элементы
-    const listsZones = document.querySelectorAll('.col-flex-element')
+    const listsZones = document.querySelectorAll('.col-flex-element:not(.wdwdwdw)')
     for (let j = 0; j < listsZones.length; j++)
     {
+        listsZones[j].classList.add("wdwdwdw")
         //const listsZon = listsZones[j]
         //перетакивание на новую доску
         listsZones[j].addEventListener('dragover', e => {
@@ -88,6 +90,7 @@ function dragAndDropZones()
             e.preventDefault()
         })
         listsZones[j].addEventListener('drop', function (e) {
+            console.log(dragItem)
             if (itemId !== 'addColumns')
             {
                 this.append(dragItem)
@@ -95,29 +98,22 @@ function dragAndDropZones()
             }
             else
             {
-                console.log(e.target.offsetParent)
-                console.log(e.target)
-                console.log(e)
-                let colZone = document.getElementById(e.path[1].id)
-                let colZoneOne = colZone.querySelectorAll('.colZone')
-                if (colZoneOne.length === 3)
+                //console.log(1111111111111111)
+                //console.log(e.target.offsetParent)
+                //ПРОВЕРИТЬ МБ ТУТ Я ПОЛУЧАЮ ID !!!
+                // console.log(e.target.attributes.id.value)
+                //console.log(e.target.parentElement)
+                let colZone = e.target.parentElement
+                if (e.target.parentElement.querySelectorAll('.colZone').length === 3)
                 {
                     alert('Вы больше не можете добавить сюда колонки! Добавьте новую строку')
                 }
                 else
                 {
-                    dragItem.id = `row${idBoardEl}/col1`
-                    colZoneOne.forEach(function (item, i, arr) {
-                        if (colZoneOne.length === 1)
-                        {
-                            item.classList.remove('col-12');
-                        }
-                        else
-                        {
-                            item.classList.remove('col-6');
-                        }
-                    })
+                    dragItem.id = `row${idBoardEl++}`
+
                     colZone.append(dragItem)
+
                     dragAndDropZones()
                 }
             }
@@ -128,7 +124,51 @@ function dragAndDropZones()
 
 dragAndDropZones()
 
+function dragAndDropRightColumn()
+{
+    //перечисляем все элементы в правой колонке
+    const listItems = document.querySelectorAll('.list_item')
+    //перебераем массивы
+    for (let i = 0; i < listItems.length; i++)
+    {
+        const item = listItems[i]
+        //начали перемещать элемент
+        item.addEventListener('dragstart', (e) => {
+            console.log(e.target.id)
+            if (e.target.id === 'addColumns')
+            {
+                itemId = item.id
+                dragItem = document.createElement('div')
+                dragItem.classList.add("col-flex-element");
+                dragItem.classList.add("colZone");
+            }
+            else
+            {
+                dragItem = item.cloneNode();
+                itemId = item.id
+                dragItem.id = idItemsEl;
+                //dragItem.setAttribute("draggable", "false");
+                dragItem.classList.remove('list_item');
+                dragItem.classList.add("listItemReady");
+                dragItem.innerText = item.innerText;
+            }
+            //удаление элемента
+            //dragItem.addEventListener('dblclick', (e)=>{
+            //    //console.log(e.path[0].id)
+            //    document.getElementById(e.path[0].id).remove()
+            //})
+        })
+        item.addEventListener('dragend', () => {})
+    }
+}
 
+dragAndDropRightColumn()
+
+
+
+
+
+/*
 function dragAndDropRightColumn()
 {
     //перечисляем все элементы в правой колонке
@@ -158,10 +198,10 @@ function dragAndDropRightColumn()
                 dragItem.innerText = item.innerText;
             }
             //удаление элемента
-            /* dragItem.addEventListener('dblclick', (e)=>{
-                 //console.log(e.path[0].id)
-                 document.getElementById(e.path[0].id).remove()
-             })*/
+             //dragItem.addEventListener('dblclick', (e)=>{
+             //    //console.log(e.path[0].id)
+             //    document.getElementById(e.path[0].id).remove()
+             //})
         })
         //Надо сделать так при перетаскивании не удалять элемент сразу а только после того как он dragend совершил
         //возращаем элемент
@@ -336,10 +376,10 @@ function finish2()
             }
             console.log(col)
             col = {}
-            /*data[rowItems[i].id] = {
-                'nameRow': rowItems[i].parentNode.querySelector('span').textContent,
-                [colItems[j].id]: col
-            }*/
+            //data[rowItems[i].id] = {
+            //    'nameRow': rowItems[i].parentNode.querySelector('span').textContent,
+            //    [colItems[j].id]: col
+            //}
         }
     }
     console.log(data)
@@ -347,10 +387,10 @@ function finish2()
 
 buttonFinish.addEventListener('click', finish)
 //Для отрисовки страницы
-/*
-* <label htmlFor="textInput">Наименование элемента</label>
-<input type="text" className="form-control textInput" id="textInput">
-    * */
+
+//<label htmlFor="textInput">Наименование элемента</label>
+//<input type="text" className="form-control textInput" id="textInput">
+
 function preview()
 {
     let content = '';
