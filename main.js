@@ -89,9 +89,13 @@ function dragAndDropZones()
         listsZones[j].addEventListener('dragleave', function (e) {
             e.preventDefault()
         })
+        //определили в какую зону скинули элемент
         listsZones[j].addEventListener('drop', function (e) {
             console.log(dragItem)
-
+            console.log(1111111111111111)
+            //console.log(e.classList.contains('tab-header'))
+            console.log(e.target)
+            console.log(e)
             /*
             * ИЗБАВИТСЯ ОТ itemId с помошью e.target.id
             * потом избавиться от dragItem определить какой элемент был передвинут из правого сектора или левого
