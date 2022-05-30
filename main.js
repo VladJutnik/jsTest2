@@ -47,9 +47,10 @@ let arr = {} // временный от туда можно будет удал�
 let data = [] //финальный объект со всеми данными
 let dragItem = '' //сюда делаем копию элемента которую будем перемещать
 let itemId = '' //сюда определяем какой элемент мы перетащили дата и время или просто инпут или текс арея
+
+
 let idItemsEl = 1 //id элементов куда тащим элементы
 let idBoardEl = 2 // id доски куда тащим элементы
-let addColumAll = false // если перетаскиваем колонку
 
 
 //ф-ции для добавления колонок
@@ -80,11 +81,12 @@ function dragAndDropZones()
         //const listsZon = listsZones[j]
         //перетакивание на новую доску
         listsZones[j].addEventListener('dragover', e => {
+            console.log(e.target)
             e.preventDefault()
         })
         listsZones[j].addEventListener('dragenter', function (e) {
             e.preventDefault() //убираем стандартные работы браузера
-            //this.style.backgroundColor = 'rgba(0,0,0,.3)'
+            this.style.backgroundColor = 'rgba(0,0,0,.3)'
         })
         listsZones[j].addEventListener('dragleave', function (e) {
             e.preventDefault()
@@ -150,7 +152,7 @@ function dragAndDropRightColumn()
             console.log(e.target.id)
             if (e.target.id === 'addColumns')
             {
-                itemId = item.id
+                //itemId = item.id
                 dragItem = document.createElement('div')
                 dragItem.classList.add("col-flex-element");
                 dragItem.classList.add("colZone");
@@ -158,8 +160,8 @@ function dragAndDropRightColumn()
             else
             {
                 dragItem = item.cloneNode();
-                itemId = item.id
-                dragItem.id = idItemsEl;
+                //itemId = item.id
+                dragItem.id = idItemsEl++;
                 //dragItem.setAttribute("draggable", "false");
                 dragItem.classList.remove('list_item');
                 dragItem.classList.add("listItemReady");
