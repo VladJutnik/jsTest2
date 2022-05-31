@@ -71,42 +71,84 @@ function addBoard()
 }
 addLine.addEventListener('click', addBoard)
 
+const getNextElement = (cursorPosition, currentElement) => {
+    const currentElementCoord = currentElement.getBoundingClientRect();
+    const currentElementCenter = currentElementCoord.y + currentElementCoord.height / 2;
+
+    const nextElement = (cursorPosition < currentElementCenter) ?
+        currentElement :
+        currentElement.nextElementSibling;
+
+    return nextElement;
+};
+
 function dragAndDropZones()
 {
+    //https://htmlacademy.ru/demos/65#11
     //находим все зоны в которые можно скидывать элементы
-    const listsZones = document.querySelectorAll('.col-flex-element:not(.wdwdwdw)')
+    const listsZones = document.querySelectorAll('.col-flex-element:not(.DragZoneProcessed)')
     for (let j = 0; j < listsZones.length; j++)
     {
-        listsZones[j].classList.add("wdwdwdw")
+        listsZones[j].classList.add("DragZoneProcessed")
         //const listsZon = listsZones[j]
         //перетакивание на новую доску
+
+        listsZones[j].addEventListener(`dragstart`, (evt) => {
+            evt.target.classList.add(`selected`);
+        });
+
         listsZones[j].addEventListener('dragover', e => {
+            //console.log(e.target)
+            e.preventDefault()
+            const currentElement = e.target;
             console.log(e.target)
+            if(currentElement.classList.contains(`listItemReady`)){
+                console.log(1111)
+                const activeElement = listsZones[j].querySelector(`.selected`);
+                const currentElement = e.target;
+                const isMoveable = activeElement !== currentElement &&
+                    currentElement.classList.contains(`listItemReady`);
+
+                //if (!isMoveable) {
+                //    return;
+                //}
+
+                const nextElement = (currentElement === activeElement.nextElementSibling) ?
+                    currentElement.nextElementSibling :
+                    currentElement;
+
+                listsZones[j].insertBefore(activeElement, nextElement);
+            }
+        })
+        listsZones[j].addEventListener('dragover', e => {
+            //console.log(e.target)
             e.preventDefault()
         })
         listsZones[j].addEventListener('dragenter', function (e) {
             e.preventDefault() //убираем стандартные работы браузера
-            this.style.backgroundColor = 'rgba(0,0,0,.3)'
+            this.style.backgroundColor = 'rgba(217,19,19,0.3)'
         })
         listsZones[j].addEventListener('dragleave', function (e) {
             e.preventDefault()
         })
         //определили в какую зону скинули элемент
         listsZones[j].addEventListener('drop', function (e) {
-            console.log(dragItem)
-            console.log(1111111111111111)
+            //console.log(dragItem)
+            //console.log(1111111111111111)
             //console.log(e.classList.contains('tab-header'))
-            console.log(e.target)
-            console.log(e)
+            //console.log(e.target)
+            //console.log(e)
             /*
             * ИЗБАВИТСЯ ОТ itemId с помошью e.target.id
             * потом избавиться от dragItem определить какой элемент был передвинут из правого сектора или левого
             * Для того чтобы можно было перетаскивать элементы между секций
             * НЕ ИЗМЕНЯЕТСЯ У ЭЛЕМЕНТОВ id !!
             * */
+            //element.classList.contains('addColumns');
             if (itemId !== 'addColumns')
             {
                 this.append(dragItem)
+                dragItem = ''
                 //showModal()
             }
             else
@@ -123,15 +165,17 @@ function dragAndDropZones()
                 else
                 {
                     dragItem.id = `row${idBoardEl++}`
-
                     e.target.parentElement.append(dragItem)
-
                     dragAndDropZones()
                 }
             }
 
         })
+        listsZones[j].addEventListener(`dragend`, (e) => {
+            e.target.classList.remove(`selected`);
+        });
     }
+
 }
 
 dragAndDropZones()
@@ -152,7 +196,7 @@ function dragAndDropRightColumn()
             console.log(e.target.id)
             if (e.target.id === 'addColumns')
             {
-                //itemId = item.id
+                itemId = item.id
                 dragItem = document.createElement('div')
                 dragItem.classList.add("col-flex-element");
                 dragItem.classList.add("colZone");
@@ -160,7 +204,7 @@ function dragAndDropRightColumn()
             else
             {
                 dragItem = item.cloneNode();
-                //itemId = item.id
+                itemId = item.id
                 dragItem.id = idItemsEl++;
                 //dragItem.setAttribute("draggable", "false");
                 dragItem.classList.remove('list_item');
@@ -178,6 +222,29 @@ function dragAndDropRightColumn()
 }
 
 dragAndDropRightColumn()
+
+//тут проверять что в какой зоне находиться элемент и и тд
+function dragAndDropSorting()
+{
+    //перечисляем все элементы в правой колонке
+    /*/!*
+    * ДОБАВИТЬ СЮДА ('.col-flex-element:not(.wdwdwdw)') что бы каждый раз не навешивать события сюда !!!
+    * *!/*/
+    const listItems = document.querySelectorAll('.listItemReady:not(.DragZoneSorting)')
+
+    //перебераем массивы
+    for (let i = 0; i < listItems.length; i++)
+    {
+        const item = listItems[i]
+        listItems[i].classList.add("DragZoneSorting")
+        //начали перемещать элемент
+        item.addEventListener('dragstart', (e) => {
+            dragItem = item.cloneNode();
+        })
+    }
+}
+
+
 
 
 
