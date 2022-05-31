@@ -101,9 +101,9 @@ function dragAndDropZones()
             //console.log(e.target)
             e.preventDefault()
             const currentElement = e.target;
-            console.log(e.target)
+            //console.log(e.target)
             if(currentElement.classList.contains(`listItemReady`)){
-                console.log(1111)
+                //console.log(1111)
                 const activeElement = listsZones[j].querySelector(`.selected`);
                 const currentElement = e.target;
                 const isMoveable = activeElement !== currentElement &&
@@ -134,7 +134,7 @@ function dragAndDropZones()
         //определили в какую зону скинули элемент
         listsZones[j].addEventListener('drop', function (e) {
             //console.log(dragItem)
-            //console.log(1111111111111111)
+            console.log(dragItem)
             //console.log(e.classList.contains('tab-header'))
             //console.log(e.target)
             //console.log(e)
@@ -145,11 +145,14 @@ function dragAndDropZones()
             * НЕ ИЗМЕНЯЕТСЯ У ЭЛЕМЕНТОВ id !!
             * */
             //element.classList.contains('addColumns');
+
+            //ТУТ ТЕПЕРЬ ЕЩ ПРОВЕРЯТЬ ПРОСТО ПЕРЕТАСКИВАЕМ ЭЛЕМЕНТ ИЛИ ЧТО ПЫТАЕМСЯ СДЕЛАТЬ
             if (itemId !== 'addColumns')
             {
                 this.append(dragItem)
                 dragItem = ''
                 //showModal()
+                dragAndDropSorting()
             }
             else
             {
@@ -193,7 +196,7 @@ function dragAndDropRightColumn()
         const item = listItems[i]
         //начали перемещать элемент
         item.addEventListener('dragstart', (e) => {
-            console.log(e.target.id)
+            //console.log(e.target.id)
             if (e.target.id === 'addColumns')
             {
                 itemId = item.id
