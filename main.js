@@ -47,15 +47,11 @@ let arr = {} // временный от туда можно будет удал�
 let data = [] //финальный объект со всеми данными
 let dragItem = '' //сюда делаем копию элемента которую будем перемещать
 let itemId = '' //сюда определяем какой элемент мы перетащили дата и время или просто инпут или текс арея
-
-
 let idItemsEl = 1 //id элементов куда тащим элементы
 let idBoardEl = 2 // id доски куда тащим элементы
 
-
 //ф-ции для добавления колонок
-function addBoard()
-{
+function addBoard() {
     const boards = document.querySelector('.boards')
     const board = document.createElement('div')
     board.innerHTML = `
@@ -67,77 +63,40 @@ function addBoard()
     `
     boards.append(board)
     dragAndDropZones()
-    //changeTitle()
 }
 addLine.addEventListener('click', addBoard)
 
-const getNextElement = (cursorPosition, currentElement) => {
-    const currentElementCoord = currentElement.getBoundingClientRect();
-    const currentElementCenter = currentElementCoord.y + currentElementCoord.height / 2;
-
-    const nextElement = (cursorPosition < currentElementCenter) ?
-        currentElement :
-        currentElement.nextElementSibling;
-
-    return nextElement;
-};
-
-function dragAndDropZones()
-{
-    //https://htmlacademy.ru/demos/65#11
+function dragAndDropZones() {
     //находим все зоны в которые можно скидывать элементы
     const listsZones = document.querySelectorAll('.col-flex-element:not(.DragZoneProcessed)')
-    for (let j = 0; j < listsZones.length; j++)
-    {
+    for (let j = 0; j < listsZones.length; j++) {
         listsZones[j].classList.add("DragZoneProcessed")
-        //const listsZon = listsZones[j]
-        //перетакивание на новую доску
-
         listsZones[j].addEventListener(`dragstart`, (evt) => {
             evt.target.classList.add(`selected`);
         });
-
         listsZones[j].addEventListener('dragover', e => {
-            //console.log(e.target)
             e.preventDefault()
             const currentElement = e.target;
-            //console.log(e.target)
-            if(currentElement.classList.contains(`listItemReady`)){
-                //console.log(1111)
+            if(currentElement.classList.contains(`listItemReady`)) {
                 const activeElement = listsZones[j].querySelector(`.selected`);
                 const currentElement = e.target;
-                const isMoveable = activeElement !== currentElement &&
-                    currentElement.classList.contains(`listItemReady`);
-
-                //if (!isMoveable) {
-                //    return;
-                //}
-
                 const nextElement = (currentElement === activeElement.nextElementSibling) ?
                     currentElement.nextElementSibling :
                     currentElement;
-
                 listsZones[j].insertBefore(activeElement, nextElement);
             }
         })
         listsZones[j].addEventListener('dragover', e => {
-            //console.log(e.target)
             e.preventDefault()
         })
         listsZones[j].addEventListener('dragenter', function (e) {
             e.preventDefault() //убираем стандартные работы браузера
-            this.style.backgroundColor = 'rgba(217,19,19,0.3)'
         })
         listsZones[j].addEventListener('dragleave', function (e) {
             e.preventDefault()
         })
         //определили в какую зону скинули элемент
         listsZones[j].addEventListener('drop', function (e) {
-            //console.log(dragItem)
-            console.log(dragItem)
-            //console.log(e.classList.contains('tab-header'))
-            //console.log(e.target)
-            //console.log(e)
             /*
             * ИЗБАВИТСЯ ОТ itemId с помошью e.target.id
             * потом избавиться от dragItem определить какой элемент был передвинут из правого сектора или левого
@@ -145,30 +104,22 @@ function dragAndDropZones()
             * НЕ ИЗМЕНЯЕТСЯ У ЭЛЕМЕНТОВ id !!
             * */
             //element.classList.contains('addColumns');
-
+            //console.log(e.target)
             //ТУТ ТЕПЕРЬ ЕЩ ПРОВЕРЯТЬ ПРОСТО ПЕРЕТАСКИВАЕМ ЭЛЕМЕНТ ИЛИ ЧТО ПЫТАЕМСЯ СДЕЛАТЬ
-            if (itemId !== 'addColumns')
-            {
+            if (itemId !== 'addColumns') {
                 this.append(dragItem)
                 dragItem = ''
                 //showModal()
-                dragAndDropSorting()
-            }
-            else
-            {
-                //console.log(1111111111111111)
-                //console.log(e.target.offsetParent)
-                //ПРОВЕРИТЬ МБ ТУТ Я ПОЛУЧАЮ ID !!!
-                // console.log(e.target.attributes.id.value)
+                //dragAndDropSorting()
+            } else if(itemId === 'addColumns') {
                 //console.log(e.target.parentElement)
-                if (e.target.parentElement.querySelectorAll('.colZone').length === 3)
-                {
+                //console.log(e.target.classList.contains('DragZoneProcessed'))
+                if (e.target.parentElement.querySelectorAll('.colZone').length === 3) {
                     alert('Вы больше не можете добавить сюда колонки! Добавьте новую строку')
-                }
-                else
-                {
+                } else {
                     dragItem.id = `row${idBoardEl++}`
-                    e.target.parentElement.append(dragItem)
+                    listsZones[j].parentElement.append(dragItem)
+                    dragItem = ''
                     dragAndDropZones()
                 }
             }
@@ -180,36 +131,26 @@ function dragAndDropZones()
     }
 
 }
-
 dragAndDropZones()
 
-function dragAndDropRightColumn()
-{
+function dragAndDropRightColumn() {
     //перечисляем все элементы в правой колонке
-    /*
-    * ДОБАВИТЬ СЮДА ('.col-flex-element:not(.wdwdwdw)') что бы каждый раз не навешивать события сюда !!!
-    * */
     const listItems = document.querySelectorAll('.list_item')
     //перебераем массивы
-    for (let i = 0; i < listItems.length; i++)
-    {
+    for (let i = 0; i < listItems.length; i++) {
         const item = listItems[i]
         //начали перемещать элемент
         item.addEventListener('dragstart', (e) => {
             //console.log(e.target.id)
-            if (e.target.id === 'addColumns')
-            {
+            if (e.target.id === 'addColumns') {
                 itemId = item.id
                 dragItem = document.createElement('div')
                 dragItem.classList.add("col-flex-element");
                 dragItem.classList.add("colZone");
-            }
-            else
-            {
+            } else {
                 dragItem = item.cloneNode();
                 itemId = item.id
                 dragItem.id = idItemsEl++;
-                //dragItem.setAttribute("draggable", "false");
                 dragItem.classList.remove('list_item');
                 dragItem.classList.add("listItemReady");
                 dragItem.innerText = item.innerText;
@@ -223,16 +164,20 @@ function dragAndDropRightColumn()
         item.addEventListener('dragend', () => {})
     }
 }
-
 dragAndDropRightColumn()
 
+
+
+
+
+
 //тут проверять что в какой зоне находиться элемент и и тд
-function dragAndDropSorting()
+/*function dragAndDropSorting()
 {
     //перечисляем все элементы в правой колонке
-    /*/!*
+    /!*!/!*
     * ДОБАВИТЬ СЮДА ('.col-flex-element:not(.wdwdwdw)') что бы каждый раз не навешивать события сюда !!!
-    * *!/*/
+    * *!/!*!/
     const listItems = document.querySelectorAll('.listItemReady:not(.DragZoneSorting)')
 
     //перебераем массивы
@@ -245,7 +190,7 @@ function dragAndDropSorting()
             dragItem = item.cloneNode();
         })
     }
-}
+}*/
 
 
 
