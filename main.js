@@ -154,6 +154,7 @@ function dragAndDropRightColumn() {
                 dragItem.classList.remove('list_item');
                 dragItem.classList.add("listItemReady");
                 dragItem.innerText = item.innerText;
+                console.log(dragItem)
             }
             //удаление элемента
             //dragItem.addEventListener('dblclick', (e)=>{
