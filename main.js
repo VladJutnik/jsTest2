@@ -50,13 +50,19 @@ let itemId = '' //сюда определяем какой элемент мы �
 let idItemsEl = 1 //id элементов куда тащим элементы
 let idBoardEl = 2 // id доски куда тащим элементы
 
+const elements = {
+    addColumns: `
+        <div class="col-flex-element colZone DragZoneProcessed" id="row2"></div>
+    `
+}
+
 //ф-ции для добавления колонок
 function addBoard() {
     const boards = document.querySelector('.boards')
     const board = document.createElement('div')
     board.innerHTML = `
         <div class="fon border-2 rounded mb-3 zone ">
-            <div id="${idBoardEl}" class="super_row">
+            <div id="super_row-${idBoardEl}" class="super_row">
                 <div id="row${idBoardEl++}" class="col-flex-element colZone"></div>
             </div>
         </div>
@@ -147,8 +153,17 @@ function dragAndDropRightColumn() {
                 dragItem = document.createElement('div')
                 dragItem.classList.add("col-flex-element");
                 dragItem.classList.add("colZone");
-            } else {
+            } else if (e.target.id === 'textField') {
+                dragItem = item.cloneNode()
+                itemId = item.id
+                dragItem.id = idItemsEl++
+                dragItem.classList.remove('list_item')
+                dragItem.classList.add("listItemReady")
+                dragItem.innerText = item.innerText
+                console.log(dragItem)
+            } else if (e.target.id === 'dateField') {
                 dragItem = item.cloneNode();
+                dragItem.querySelector('span').remove()
                 itemId = item.id
                 dragItem.id = idItemsEl++;
                 dragItem.classList.remove('list_item');
@@ -167,7 +182,37 @@ function dragAndDropRightColumn() {
 }
 dragAndDropRightColumn()
 
+const $card = document.querySelector('#working-area')
+if ($card) {
+    $card.addEventListener('click', event => {
+        if (event.target.classList.contains('js-remove')) {
+            /*const id = event.target.dataset.id
 
+            fetch('/card/remove/' + id, {
+                method: 'delete'
+            }).then(res => res.json())
+                .then(card => {
+                    if (card.courses.length) {
+                        const html = card.courses.map(c => {
+                            return `
+              <tr>
+                <td>${c.title}</td>
+                <td>${c.count}</td>
+                <td>
+                  <button class="btn btm-small js-remove" data-id="${c.id}">Удалить</button>
+                </td>
+              </tr>
+              `
+                        }).join('')
+                        $card.querySelector('tbody').innerHTML = html
+                        $card.querySelector('.price').textContent = toCurrency(card.price)
+                    } else {
+                        $card.innerHTML = '<p>Корзина пуста</p>'
+                    }
+                })*/
+        }
+    })
+}
 
 
 
